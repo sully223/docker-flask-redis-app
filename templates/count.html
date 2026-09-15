@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Suleiman's Containers Challenge - Visit Counter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="counter-wrap">
+        <svg viewBox="0 0 800 400" style="max-width: 750px; width: 100%; border-radius: 12px;">
+            <defs>
+                <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1e1e2f"/>
+                    <stop offset="100%" stop-color="#2a2a45"/>
+                </linearGradient>
+                <linearGradient id="counter" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#f87171"/>
+                    <stop offset="100%" stop-color="#dc2626"/>
+                </linearGradient>
+            </defs>
+
+            <rect width="800" height="400" fill="url(#bg2)"/>
+
+            <rect x="230" y="150" width="340" height="110" rx="14" fill="url(#counter)"/>
+            <rect x="230" y="150" width="340" height="110" rx="14" fill="none" stroke="#ffffff" stroke-opacity="0.2" stroke-width="2"/>
+            <line x1="315" y1="160" x2="315" y2="250" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="400" y1="160" x2="400" y2="250" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+            <line x1="485" y1="160" x2="485" y2="250" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+
+            <text id="digit0" x="272" y="225" font-family="Menlo, Consolas, monospace" font-size="46" font-weight="700" fill="#ffffff" text-anchor="middle">0</text>
+            <text id="digit1" x="357" y="225" font-family="Menlo, Consolas, monospace" font-size="46" font-weight="700" fill="#ffffff" text-anchor="middle">0</text>
+            <text id="digit2" x="442" y="225" font-family="Menlo, Consolas, monospace" font-size="46" font-weight="700" fill="#ffffff" text-anchor="middle">0</text>
+            <text id="digit3" x="527" y="225" font-family="Menlo, Consolas, monospace" font-size="46" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+
+            <text x="400" y="90" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#ffffff" text-anchor="middle">Suleiman's Count App</text>
+            <text x="400" y="120" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#94a3b8" text-anchor="middle">(Containers Challenge)</text>
+
+            <circle cx="345" cy="300" r="6" fill="#f87171"/>
+            <text x="358" y="306" font-family="Menlo, Consolas, monospace" font-size="16" fill="#cbd5e1">powered by Redis</text>
+        </svg>
+    </div>
+
+    <script>
+        let current = {{ visits }};
+        const digitEls = [
+            document.getElementById('digit0'),
+            document.getElementById('digit1'),
+            document.getElementById('digit2'),
+            document.getElementById('digit3'),
+        ];
+
+        function render(value) {
+            const padded = String(value).padStart(4, '0').slice(-4);
+            for (let i = 0; i < 4; i++) {
+                digitEls[i].textContent = padded[i];
+            }
+        }
+
+        function animateTo(target) {
+            const start = current;
+            const diff = target - start;
+            const duration = 120;
+            const startTime = performance.now();
+
+            function frame(now) {
+                const t = Math.min((now - startTime) / duration, 1);
+                const value = Math.round(start + diff * t);
+                render(value);
+                if (t < 1) {
+                    requestAnimationFrame(frame);
+                } else {
+                    current = target;
+                    digitEls.forEach(el => el.setAttribute('fill', '#34d399'));
+                    setTimeout(() => digitEls.forEach(el => el.setAttribute('fill', '#ffffff')), 150);
+                }
+            }
+            requestAnimationFrame(frame);
+        }
+
+        render(current);
+
+        setInterval(async () => {
+            const res = await fetch('/count/api');
+            const data = await res.json();
+            animateTo(data.visits);
+        }, 600);
+    </script>
+</body>
+</html>

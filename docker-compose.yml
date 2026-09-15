@@ -1,0 +1,24 @@
+services:
+  app:
+    image: flask-app:multistage5
+    build:
+      context: .
+      dockerfile: Dockerfile.flask
+    ports:
+      - "5002:5002"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile.redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:

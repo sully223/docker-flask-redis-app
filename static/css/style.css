@@ -1,0 +1,38 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #1e1e2f;
+    color: #ffffff;
+    padding-top: 50px;
+}
+
+img {
+    max-width: 500px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.counter-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.counter-overlay {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Menlo, Consolas, monospace;
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.pulse {
+    animation: pulse 0.4s ease-out;
+}
+
+@keyframes pulse {
+    0%   { transform: translate(-50%, -50%) scale(1.4); color: #34d399; }
+    100% { transform: translate(-50%, -50%) scale(1); color: #ffffff; }
+}
