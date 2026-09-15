@@ -1,8 +1,6 @@
-# CoderCo Containers Challenge
+## Building a Multi-Container Application
 
 ![Visit counter animation](static/images/count-animation.gif)
-
-## Building a Multi-Container Application
 
 ### Objective
 Create a multi-container application that consists of a simple Python Flask web application and a Redis database. The Flask application should use Redis to store and retrieve data.
